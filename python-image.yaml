@@ -1,0 +1,20 @@
+---
+- hosts: ansible
+  become: true
+
+  tasks:
+  - name: create docker image using  file
+    command: docker build -t my-nginx-python:latest .
+    args:
+      chdir: /opt/k8s-lab/
+
+  - name: create tag to image
+    command: docker tag  my-nginx-python:latest chinnadas/my-nginx-python:latest
+
+
+  - name: push image on to dockerhub
+    command: docker push  chinnadas/my-nginx-python:latest
+
+  - name: remove docker images form ansible server
+    command: docker rmi my-nginx-python:latest chinnadas/my-nginx-python:latest
+    ignore_errors: yes
